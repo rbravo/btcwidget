@@ -1,0 +1,304 @@
+:root {
+  --bg: #0b0d10;
+  --panel: #1a1f27;
+  --fg: #e8eaed;
+  --muted: #8a919e;
+  --up: rgb(22, 199, 132);
+  --down: rgb(234, 57, 67);
+  --warn: #f5a623;
+  --btc: #f7931a;
+  /* área da janela que a tela não mostra (?inset=) */
+  --inset-top: 0px;
+  --inset-right: 0px;
+  --inset-bottom: 0px;
+  --inset-left: 0px;
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+body {
+  color: var(--fg);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'DejaVu Sans', 'Liberation Sans', sans-serif;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  /* tela de toque num quiosque: sem cursor, seleção, zoom ou scroll */
+  cursor: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+* {
+  cursor: none !important;
+}
+
+#root {
+  box-sizing: border-box;
+  padding: var(--inset-top) var(--inset-right) var(--inset-bottom) var(--inset-left);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  outline: none;
+}
+
+.app {
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: 4px 8px 4px;
+}
+
+/* ---- topo ---- */
+.top {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 22px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.pair {
+  /* área de toque maior que o texto (touch resistivo é impreciso) */
+  padding: 4px 10px 4px 0;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--fg);
+}
+
+.btc {
+  color: var(--btc);
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--warn);
+}
+
+.status.live .dot {
+  background: var(--up);
+}
+
+.status.offline .dot {
+  background: var(--down);
+}
+
+.status.offline {
+  color: var(--down);
+}
+
+/* ---- preço ---- */
+.quote {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  column-gap: 10px;
+  row-gap: 2px;
+  padding: 2px 0 4px;
+}
+
+.price {
+  font-size: min(15vw, 19vh);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+
+.price .sym {
+  font-size: 0.45em;
+  font-weight: 600;
+  color: var(--muted);
+  margin-right: 0.12em;
+  letter-spacing: 0;
+}
+
+.price .dec {
+  font-size: 0.45em;
+  color: var(--muted);
+  letter-spacing: 0;
+}
+
+.price.up,
+.price.up .dec {
+  color: var(--up);
+}
+
+.price.down,
+.price.down .dec {
+  color: var(--down);
+}
+
+.price.stale {
+  opacity: 0.45;
+}
+
+.change {
+  margin-left: auto;
+  text-align: right;
+  line-height: 1.15;
+  padding-bottom: 0.1em;
+  white-space: nowrap;
+}
+
+.change .pct {
+  font-size: min(5.5vw, 7vh);
+  font-weight: 700;
+}
+
+.change .abs {
+  font-size: min(3.6vw, 4.6vh);
+  color: var(--muted);
+}
+
+.change.up .pct {
+  color: var(--up);
+}
+
+.change.down .pct {
+  color: var(--down);
+}
+
+.change.flat .pct {
+  color: var(--muted);
+}
+
+/* tela em pé: variação numa linha só, abaixo do preço */
+@media (orientation: portrait) {
+  .change {
+    margin-left: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+}
+
+/* ---- gráfico ---- */
+.chart {
+  flex: 1 1 auto;
+  min-height: 50px;
+  position: relative;
+  margin: 0 -6px;
+}
+
+.chart-canvas,
+.chart-canvas canvas,
+.chart-msg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.chart-canvas canvas {
+  display: block;
+}
+
+.chart-msg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ---- períodos ---- */
+.tfs {
+  flex: none;
+  display: flex;
+  gap: 4px;
+  height: 30px;
+  margin-top: 4px;
+}
+
+.tfs button {
+  flex: 1;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.tfs button.active {
+  background: var(--panel);
+  color: var(--fg);
+}
+
+@media (max-height: 260px) {
+  .tfs {
+    height: 24px;
+  }
+  .top {
+    min-height: 18px;
+  }
+}
+
+.calibrate {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  background: rgba(11, 13, 16, 0.9);
+}
+
+.calibrate svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.calibrate-info {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -30%);
+  width: 70%;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.calibrate-info code {
+  color: var(--up);
+}
+
+.calibrate-info .muted {
+  color: var(--muted);
+}
+
+.fatal {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+}
